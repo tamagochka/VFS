@@ -8,4 +8,5 @@ public interface Entity {
     void move();
     boolean isExist();
     String getAbsolutePath();
+    long getSize();
 }
