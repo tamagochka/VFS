@@ -1,6 +1,6 @@
 package my.tamagochka.VFS;
 
-public interface File {
+public interface File extends Entity {
     String readLine();
     byte[] readBytes();
     void writeLine(String line);

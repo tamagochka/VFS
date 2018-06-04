@@ -1,10 +1,6 @@
 package my.tamagochka.VFS;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public class Main {
 
@@ -19,12 +15,17 @@ public class Main {
             System.out.println(i.next());
         }
 */
+//        Directory dir = new DirectoryFS("test\\test_dir_3");
+        Directory dir = new DirectoryFS("test");
+        System.out.println(dir.listEntities());
+        System.out.println(dir.listFiles());
+        System.out.println(dir.listDirs());
 
-        java.io.File f = new File("test");
-        File fs[] = f.listFiles();
-        System.out.println(fs[1].getPath());
-        System.out.println(fs[1].getName());
-
+        System.out.println("iterator test:");
+        for(Iterator<Entity> e = dir.iterator(); e.hasNext();) {
+            Entity en = e.next();
+            System.out.println("t: " + en);
+        }
 
 
 

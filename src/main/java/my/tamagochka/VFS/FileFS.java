@@ -36,4 +36,49 @@ public class FileFS implements File {
     public long countLines() {
         return 0;
     }
+
+    @Override
+    public void create() {
+
+    }
+
+    @Override
+    public void delete() {
+
+    }
+
+    @Override
+    public void rename() {
+
+    }
+
+    @Override
+    public void copy() {
+
+    }
+
+    @Override
+    public void move() {
+
+    }
+
+    @Override
+    public boolean isExist() {
+        return false;
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        return null;
+    }
+
+    @Override
+    public long getSize() {
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return path;
+    }
 }
