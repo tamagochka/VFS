@@ -118,7 +118,6 @@ public class DirectoryFS implements Directory {
                     entities.addAll(((Directory) entity).listDirs());
                     if(iterateFiles) entities.addAll(((Directory) entity).listFiles());
                 }
-//                if(entity instanceof  Directory && !iterateDirs) continue;
             } while(!(entity instanceof File) && !iterateDirs && !entities.isEmpty());
             return entity;
         }

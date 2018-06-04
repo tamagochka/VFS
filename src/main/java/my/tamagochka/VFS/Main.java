@@ -22,11 +22,13 @@ public class Main {
         System.out.println(dir.listDirs());
 
         System.out.println("iterator test:");
-        for(Iterator<Entity> e = dir.iterator(); e.hasNext();) {
-            Entity en = e.next();
-            System.out.println("t: " + en);
-        }
+        for(Entity e : dir) {
+            if(e instanceof File)
+                System.out.println(e + " - file");
+            else
+                System.out.println(e + " - dirs");
 
+        }
 
 
 
