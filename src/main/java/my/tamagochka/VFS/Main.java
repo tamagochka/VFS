@@ -1,5 +1,7 @@
 package my.tamagochka.VFS;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,7 +20,10 @@ public class Main {
         }
 */
 
-
+        java.io.File f = new File("test");
+        File fs[] = f.listFiles();
+        System.out.println(fs[1].getPath());
+        System.out.println(fs[1].getName());
 
 
 
