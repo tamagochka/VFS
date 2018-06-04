@@ -74,7 +74,8 @@ public class FileFS implements File {
 
     @Override
     public long getSize() {
-        return 0;
+        java.io.File file = new java.io.File(path);
+        return file.length();
     }
 
     @Override

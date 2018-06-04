@@ -1,7 +1,5 @@
 package my.tamagochka.VFS;
 
-import java.util.Iterator;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -29,6 +27,9 @@ public class Main {
                 System.out.println(e + " - dirs");
 
         }
+
+        File f = new FileFS("test\\12345.txt");
+        System.out.println(f.getSize());
 
 
 
