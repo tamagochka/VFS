@@ -1,6 +1,6 @@
 package my.tamagochka.VFS;
 
-public class FileFS implements File {
+public class FileFS extends EntityFS implements File {
 
     private String path;
 
@@ -60,17 +60,6 @@ public class FileFS implements File {
     @Override
     public void move() {
 
-    }
-
-    @Override
-    public boolean isExist() {
-        return false;
-    }
-
-    @Override
-    public String getAbsolutePath() {
-        java.io.File file = new java.io.File(path);
-        return file.getAbsolutePath();
     }
 
     @Override

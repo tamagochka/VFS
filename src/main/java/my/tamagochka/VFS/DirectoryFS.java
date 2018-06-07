@@ -2,7 +2,7 @@ package my.tamagochka.VFS;
 
 import java.util.*;
 
-public class DirectoryFS implements Directory {
+public class DirectoryFS extends EntityFS implements Directory {
 
     private String path;
 
@@ -61,18 +61,6 @@ public class DirectoryFS implements Directory {
     @Override
     public void move() {
 
-    }
-
-    @Override
-    public boolean isExist() {
-        java.io.File dir = new java.io.File(path);
-        return dir.exists();
-    }
-
-    @Override
-    public String getAbsolutePath() {
-        java.io.File dir = new java.io.File(path);
-        return dir.getAbsolutePath();
     }
 
     @Override
