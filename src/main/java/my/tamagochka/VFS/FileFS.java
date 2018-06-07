@@ -2,14 +2,10 @@ package my.tamagochka.VFS;
 
 public class FileFS extends EntityFS implements File {
 
-    private String path;
-
-    public FileFS(String path) {
-        this.path = path;
-    }
+    public FileFS(String path) { super(path); }
 
     public FileFS() {
-        this.path = null;
+        super(null);
     }
 
     @Override
@@ -64,12 +60,12 @@ public class FileFS extends EntityFS implements File {
 
     @Override
     public long getSize() {
-        java.io.File file = new java.io.File(path);
+        java.io.File file = new java.io.File(super.getPath());
         return file.length();
     }
 
     @Override
     public String toString() {
-        return path;
+        return super.getPath();
     }
 }

@@ -4,19 +4,15 @@ import java.util.*;
 
 public class DirectoryFS extends EntityFS implements Directory {
 
-    private String path;
-
-    public DirectoryFS(String path) {
-        this.path = path;
-    }
+    public DirectoryFS(String path) { super(path); }
 
     public DirectoryFS() {
-        this.path = null;
+        super(null);
     }
 
     @Override
     public List<Directory> listDirs() {
-        java.io.File dir = new java.io.File(path);
+        java.io.File dir = new java.io.File(super.getPath());
         List<Directory> dirs = new LinkedList<>();
         Arrays.asList(dir.listFiles(pathname -> pathname.isDirectory())).forEach(f -> dirs.add(new DirectoryFS(f.getPath())));
         return dirs;
@@ -24,7 +20,7 @@ public class DirectoryFS extends EntityFS implements Directory {
 
     @Override
     public List<File> listFiles() {
-        java.io.File dir = new java.io.File(path);
+        java.io.File dir = new java.io.File(super.getPath());
         List<File> files = new LinkedList<>();
         Arrays.asList(dir.listFiles(pathname -> !pathname.isDirectory())).forEach(f -> files.add(new FileFS(f.getPath())));
         return files;
@@ -65,12 +61,16 @@ public class DirectoryFS extends EntityFS implements Directory {
 
     @Override
     public long getSize() {
+
+
+
+
         return 0;
     }
 
     @Override
     public String toString() {
-        return path;
+        return super.getPath();
     }
 
     @Override
