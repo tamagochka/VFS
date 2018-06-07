@@ -19,6 +19,8 @@ public class Main {
         System.out.println(dir.listFiles());
         System.out.println(dir.listDirs());
 
+        System.out.println("size dir: " + dir.getSize());
+
         System.out.println("iterator test:");
         for(Entity e : dir) {
             if(e instanceof File)
@@ -30,6 +32,9 @@ public class Main {
 
         File f = new FileFS("test\\12345.txt");
         System.out.println(f.getSize());
+
+
+
 
 
 

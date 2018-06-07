@@ -61,11 +61,16 @@ public class DirectoryFS extends EntityFS implements Directory {
 
     @Override
     public long getSize() {
+        long size = 0;
+        for(Iterator<Entity> i = getFileIterator(true, false, true); i.hasNext();) {
+            File file = (File) i.next();
+            size = size + file.getSize();
+        }
+        return size;
+    }
 
-
-
-
-        return 0;
+    public Iterator<Entity> getFileIterator(boolean iterateFiles, boolean iterateDirs, boolean iterateSubdirs) {
+        return new EntitiesIterator(iterateFiles, iterateDirs, iterateSubdirs);
     }
 
     @Override
