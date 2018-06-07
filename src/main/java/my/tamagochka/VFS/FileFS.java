@@ -69,7 +69,8 @@ public class FileFS implements File {
 
     @Override
     public String getAbsolutePath() {
-        return null;
+        java.io.File file = new java.io.File(path);
+        return file.getAbsolutePath();
     }
 
     @Override
