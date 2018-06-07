@@ -1,5 +1,7 @@
 package my.tamagochka.VFS;
 
+import java.io.IOException;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -30,8 +32,24 @@ public class Main {
 
         }
 
-        File f = new FileFS("test\\12345.txt");
-        System.out.println(f.getSize());
+        File f = new FileFS("test\\2.txt");
+        System.out.println("file size: " + f.getSize());
+
+
+        try {
+            long average = 0;
+
+            for(int i = 0; i < 100; i++) {
+
+                long start = System.nanoTime();
+                System.out.println(f.countLines());
+                long end = System.nanoTime();
+                average += (end - start);
+            }
+            System.out.println("average time to count: " + (average / 100));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
 
 
 

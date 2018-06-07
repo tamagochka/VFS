@@ -1,5 +1,14 @@
 package my.tamagochka.VFS;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
 public class FileFS extends EntityFS implements File {
 
     public FileFS(String path) { super(path); }
@@ -29,8 +38,30 @@ public class FileFS extends EntityFS implements File {
     }
 
     @Override
-    public long countLines() {
-        return 0;
+    public long countLines() throws IOException {
+        InputStream is = new BufferedInputStream(new FileInputStream(super.getPath()));
+        byte c[] = new byte[1024];
+        int count = 0;
+        int readChars = 0;
+        boolean endsWithoutNewline = false;
+        while((readChars = is.read(c)) != -1) {
+            for(int i = 0; i < readChars; i++) {
+                if(c[i] == '\n')
+                    count++;
+            }
+            endsWithoutNewline = (c[readChars - 1] != '\n');
+        }
+        if(endsWithoutNewline) count++;
+        is.close();
+        return count;
+
+/*      // about 1 million nanosecond
+        java.io.File f = new java.io.File(super.getPath());
+        Path p = f.toPath();
+        Stream<String> lines = Files.lines(p, Charset.defaultCharset());
+        long numOfLines = lines.count();
+        return numOfLines;
+*/
     }
 
     @Override
