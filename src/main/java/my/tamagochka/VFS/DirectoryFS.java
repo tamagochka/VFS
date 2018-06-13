@@ -35,28 +35,28 @@ public class DirectoryFS extends EntityFS implements Directory {
     }
 
     @Override
-    public void create() {
-
+    public boolean create(boolean replace) {
+        return false;
     }
 
     @Override
-    public void delete() {
-
+    public boolean delete() {
+        return false;
     }
 
     @Override
-    public void rename() {
-
+    public boolean rename(String newName, boolean replace) {
+        return false;
     }
 
     @Override
-    public void copy() {
-
+    public Directory copy(String target, boolean replace) {
+        return null;
     }
 
     @Override
-    public void move() {
-
+    public boolean move(String target, boolean replace) {
+        return false;
     }
 
     @Override

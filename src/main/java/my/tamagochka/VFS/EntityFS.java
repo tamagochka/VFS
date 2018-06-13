@@ -1,14 +1,16 @@
 package my.tamagochka.VFS;
 
+import java.io.IOException;
+
 public abstract class EntityFS implements Entity {
 
     private String path;
 
-    public abstract void create();
-    public abstract void delete();
-    public abstract void rename();
-    public abstract void copy();
-    public abstract void move();
+    public abstract boolean create(boolean replace) throws IOException;
+    public abstract boolean delete();
+    public abstract boolean rename(String target, boolean replace) throws IOException;
+    public abstract Entity copy(String target, boolean replace) throws IOException;
+    public abstract boolean move(String target, boolean replace) throws IOException;
     public abstract long getSize();
 
     public EntityFS(String path) {

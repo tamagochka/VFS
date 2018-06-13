@@ -4,57 +4,22 @@ import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        File s = new FileFS("test\\7.txt");
+        if(s.move("6.txt", true))
+            System.out.println("file was moved");
+        else
+            System.out.println("file was not moved");
+
+
 /*
-        Filesystem fs = new Filesystem("test");
-        System.out.println(fs.isExist("."));
-        System.out.println(fs.isExist("123.txt"));
-        System.out.println(fs.getAbsolutePath("."));
-        Iterator<String> i = fs.getFileIterator(".", true);
-        while(i.hasNext()) {
-            System.out.println(i.next());
-        }
+        File d = (File) s.copy("test\\6.txt", false);
+        if(d == null)
+            System.out.println("no copied!!!");
+        else
+            System.out.println(d.getAbsolutePath());
 */
-//        Directory dir = new DirectoryFS("test\\test_dir_3");
-        Directory dir = new DirectoryFS("test");
-        System.out.println(dir.listEntities());
-        System.out.println(dir.listFiles());
-        System.out.println(dir.listDirs());
-
-        System.out.println("size dir: " + dir.getSize());
-
-        System.out.println("iterator test:");
-        for(Entity e : dir) {
-            if(e instanceof File)
-                System.out.println(e + " - file");
-            else
-                System.out.println(e + " - dirs");
-
-        }
-
-        File f = new FileFS("test\\2.txt");
-        System.out.println("file size: " + f.getSize());
-
-
-        try {
-            long average = 0;
-
-            for(int i = 0; i < 100; i++) {
-
-                long start = System.nanoTime();
-                System.out.println(f.countLines());
-                long end = System.nanoTime();
-                average += (end - start);
-            }
-            System.out.println("average time to count: " + (average / 100));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
 
 
 

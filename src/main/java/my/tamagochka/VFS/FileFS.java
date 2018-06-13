@@ -4,10 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.stream.Stream;
+import java.nio.file.StandardCopyOption;
 
 public class FileFS extends EntityFS implements File {
 
@@ -54,39 +52,59 @@ public class FileFS extends EntityFS implements File {
         if(endsWithoutNewline) count++;
         is.close();
         return count;
+    }
 
-/*      // about 1 million nanosecond
-        java.io.File f = new java.io.File(super.getPath());
-        Path p = f.toPath();
-        Stream<String> lines = Files.lines(p, Charset.defaultCharset());
-        long numOfLines = lines.count();
-        return numOfLines;
+    @Override
+    public boolean create(boolean replace) throws IOException {
+        java.io.File file = new java.io.File(super.getPath());
+        if(replace && file.exists()) {
+            if (!file.delete()) return false;
+        }
+        return file.createNewFile();
+    }
+
+    @Override
+    public boolean delete() {
+        java.io.File file = new java.io.File(super.getPath());
+        return file.delete();
+    }
+
+    @Override
+    public boolean rename(String target, boolean replace) throws IOException {
+/*
+        java.io.File file = new java.io.File(super.getPath());
+        file.renameTo(new java.io.File((file.getParent() == null ? "" : file.getParent() + java.io.File.separator) + target));
 */
+
+
+
+
+        return false;
     }
 
     @Override
-    public void create() {
-
+    public File copy(String target, boolean replace) throws IOException {
+        java.io.File sourceFile = new java.io.File(super.getPath());
+        java.io.File targetCheck = new java.io.File(target);
+        String targetPath = null;
+        if(targetCheck.isDirectory())
+            targetPath = target + java.io.File.separator + sourceFile.getName();
+        else
+            targetPath = target;
+        java.io.File targetFile = new java.io.File(targetPath);
+        if(!replace && targetFile.exists()) return null;
+        Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        return new FileFS(targetPath);
     }
 
     @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void rename() {
-
-    }
-
-    @Override
-    public void copy() {
-
-    }
-
-    @Override
-    public void move() {
-
+    public boolean move(String target, boolean replace) throws IOException{
+        if(copy(target, replace) != null) {
+            if(delete()) {
+                super.setPath(target);
+                return true;
+            }
+        } return false;
     }
 
     @Override
