@@ -6,11 +6,12 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        File s = new FileFS("test\\7.txt");
-        if(s.move("6.txt", true))
-            System.out.println("file was moved");
-        else
-            System.out.println("file was not moved");
+        File s = new FileFS("test\\1.txt");
+        if(s.rename("3.txt", true)) {
+            System.out.println("file was renamed");
+            System.out.println(((FileFS) s).getPath());
+        } else
+            System.out.println("file was not renamed");
 
 
 /*

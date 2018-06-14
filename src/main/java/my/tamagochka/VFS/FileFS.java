@@ -66,20 +66,17 @@ public class FileFS extends EntityFS implements File {
     @Override
     public boolean delete() {
         java.io.File file = new java.io.File(super.getPath());
-        return file.delete();
+        if(file.delete()) {
+            super.setPath(null);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean rename(String target, boolean replace) throws IOException {
-/*
-        java.io.File file = new java.io.File(super.getPath());
-        file.renameTo(new java.io.File((file.getParent() == null ? "" : file.getParent() + java.io.File.separator) + target));
-*/
-
-
-
-
-        return false;
+        java.io.File sourceFile = new java.io.File(super.getPath());
+        return move(sourceFile.getParent() == null ? "" : sourceFile.getParent() + java.io.File.separator + target, replace);
     }
 
     @Override
