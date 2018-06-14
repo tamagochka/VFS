@@ -1,10 +1,12 @@
 package my.tamagochka.VFS;
 
+import java.io.File;
 import java.io.IOException;
 
 public abstract class EntityFS implements Entity {
 
     private String path;
+    private File entity;
 
     public abstract boolean create(boolean replace) throws IOException;
     public abstract boolean delete();
@@ -13,26 +15,18 @@ public abstract class EntityFS implements Entity {
     public abstract boolean move(String target, boolean replace) throws IOException;
     public abstract long getSize();
 
-    public EntityFS(String path) {
+    EntityFS(String path) { setPath(path); }
+
+    void setPath(String path) {
         this.path = path;
+        if(path != null) entity = new File(path);
     }
 
-    public String getPath() {
+    String getPath() {
         return path;
     }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public boolean isExist() {
-        java.io.File entity = new java.io.File(path);
-        return entity.exists();
-    }
-
-    public String getAbsolutePath() {
-        java.io.File entity = new java.io.File(path);
-        return entity.getAbsolutePath();
-    }
+    File getEntity() { return entity; }
+    public boolean isExist() { return entity != null && entity.exists(); }
+    public String getAbsolutePath() { return entity != null ? entity.getAbsolutePath() : null; }
 
 }
