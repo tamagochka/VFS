@@ -8,25 +8,26 @@ public abstract class EntityFS implements Entity {
     private String path;
     private File entity;
 
-    public abstract boolean create(boolean replace) throws IOException;
-    public abstract boolean delete();
-    public abstract boolean rename(String target, boolean replace) throws IOException;
-    public abstract Entity copy(String target, boolean replace) throws IOException;
-    public abstract boolean move(String target, boolean replace) throws IOException;
-    public abstract long getSize();
+    @Override public abstract boolean create(boolean replace) throws IOException;
+    @Override public abstract boolean delete();
+    @Override public abstract boolean rename(String target, boolean replace) throws IOException;
+    @Override public abstract Entity copy(String target, boolean replace) throws IOException;
+    @Override public abstract boolean move(String target, boolean replace) throws IOException;
+    @Override public abstract long getSize();
 
-    EntityFS(String path) { setPath(path); }
+    protected EntityFS(String path) { setPath(path); }
 
-    void setPath(String path) {
+    protected void setPath(String path) {
         this.path = path;
         if(path != null) entity = new File(path);
+            else entity = null;
     }
 
-    String getPath() {
+    protected String getPath() {
         return path;
     }
-    File getEntity() { return entity; }
-    public boolean isExist() { return entity != null && entity.exists(); }
-    public String getAbsolutePath() { return entity != null ? entity.getAbsolutePath() : null; }
+    protected File getEntity() { return entity; }
+    @Override public boolean isExist() { return entity != null && entity.exists(); }
+    @Override public String getAbsolutePath() { return entity != null ? entity.getAbsolutePath() : null; }
 
 }

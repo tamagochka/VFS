@@ -37,7 +37,8 @@ public class FileFS extends EntityFS implements File {
 
     @Override
     public long countLines() throws IOException {
-        InputStream is = new BufferedInputStream(new FileInputStream(super.getPath()));
+        if(!isExist()) return 0;
+        InputStream is = new BufferedInputStream(new FileInputStream(getPath()));
         byte c[] = new byte[1024];
         int count = 0;
         int readChars = 0;
@@ -56,18 +57,16 @@ public class FileFS extends EntityFS implements File {
 
     @Override
     public boolean create(boolean replace) throws IOException {
-        java.io.File file = new java.io.File(super.getPath());
-        if(replace && file.exists()) {
-            if (!file.delete()) return false;
+        if(replace && isExist()) {
+            if (!getEntity().delete()) return false;
         }
-        return file.createNewFile();
+        return getEntity().createNewFile();
     }
 
     @Override
     public boolean delete() {
-        java.io.File file = new java.io.File(super.getPath());
-        if(file.delete()) {
-            super.setPath(null);
+        if(getEntity().delete()) {
+            setPath(null);
             return true;
         }
         return false;
@@ -75,13 +74,13 @@ public class FileFS extends EntityFS implements File {
 
     @Override
     public boolean rename(String target, boolean replace) throws IOException {
-        java.io.File sourceFile = new java.io.File(super.getPath());
+        java.io.File sourceFile = getEntity();
         return move(sourceFile.getParent() == null ? "" : sourceFile.getParent() + java.io.File.separator + target, replace);
     }
 
     @Override
     public File copy(String target, boolean replace) throws IOException {
-        java.io.File sourceFile = new java.io.File(super.getPath());
+        java.io.File sourceFile = getEntity();
         java.io.File targetCheck = new java.io.File(target);
         String targetPath = null;
         if(targetCheck.isDirectory())
@@ -98,7 +97,7 @@ public class FileFS extends EntityFS implements File {
     public boolean move(String target, boolean replace) throws IOException{
         if(copy(target, replace) != null) {
             if(delete()) {
-                super.setPath(target);
+                setPath(target);
                 return true;
             }
         } return false;
@@ -106,12 +105,11 @@ public class FileFS extends EntityFS implements File {
 
     @Override
     public long getSize() {
-        java.io.File file = new java.io.File(super.getPath());
-        return file.length();
+        return getEntity().length();
     }
 
     @Override
     public String toString() {
-        return super.getPath();
+        return getPath();
     }
 }
