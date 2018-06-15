@@ -6,10 +6,6 @@ public class DirectoryFS extends EntityFS implements Directory {
 
     public DirectoryFS(String path) { super(path); }
 
-    public DirectoryFS() {
-        super(null);
-    }
-
     @Override
     public List<Directory> listDirs() {
         java.io.File dir = new java.io.File(super.getPath());
@@ -45,8 +41,8 @@ public class DirectoryFS extends EntityFS implements Directory {
     }
 
     @Override
-    public boolean rename(String newName, boolean replace) {
-        return false;
+    public Directory copy(Entity target, boolean replace) {
+        return null;
     }
 
     @Override
@@ -55,8 +51,23 @@ public class DirectoryFS extends EntityFS implements Directory {
     }
 
     @Override
-    public boolean move(String target, boolean replace) {
-        return false;
+    public Directory move(Entity target, boolean replace) {
+        return null;
+    }
+
+    @Override
+    public Directory move(String target, boolean replace) {
+        return null;
+    }
+
+    @Override
+    public Directory rename(Entity newName, boolean replace) {
+        return null;
+    }
+
+    @Override
+    public Directory rename(String newName, boolean replace) {
+        return null;
     }
 
     @Override

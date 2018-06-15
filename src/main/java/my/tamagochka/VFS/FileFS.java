@@ -1,7 +1,5 @@
 package my.tamagochka.VFS;
 
-import com.sun.istack.internal.NotNull;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,7 +12,23 @@ public class FileFS extends EntityFS implements File {
     public FileFS(String path) { super(path); }
 
     @Override
-    public String readLine() {
+    public String readLine() throws IOException {
+        if(!isExist()) return null;
+        InputStream is = new BufferedInputStream(new FileInputStream(getPath()));
+        char c[] = new char[1024];
+        int readChars = 0;
+        StringBuilder str = new StringBuilder();
+        while((readChars = is.read(c)) != -1) {
+            int i = 0;
+            while(i < readChars && c[i] != '\n') {
+                str.append(c[i]);
+                i++;
+            }
+            if(c[i] == '\n') break;
+        }
+        System.out.println(str.toString());
+
+
         return null;
     }
 
@@ -32,8 +46,6 @@ public class FileFS extends EntityFS implements File {
     public void writeBytes(byte[] bytes) {
 
     }
-
-    // сделать методы copy move и rename с параметром target типа Entity
 
     @Override
     public long countLines() throws IOException {
@@ -56,72 +68,61 @@ public class FileFS extends EntityFS implements File {
     }
 
     @Override
+    public Directory getDirectory() {
+        return new DirectoryFS(getParent());
+    }
+
+    @Override
     public boolean create(boolean replace) throws IOException {
         if(replace && isExist()) {
-            if (!getEntity().delete()) return false;
+            if(getEntity().isDirectory() || !delete()) return false;
         }
         return getEntity().createNewFile();
     }
 
     @Override
     public boolean delete() {
-        if(isExist() && getEntity().delete()) {
-            setPath(null);
-            return true;
-        }
-        return false;
+        return isExist() && !getEntity().isDirectory() && getEntity().delete();
+    }
+
+    @Override
+    public File copy(Entity target, boolean replace) throws IOException{
+        if(target == null) throw new NullPointerException();
+        if(!isExist()) return null;
+        File targetFile = target instanceof Directory ?
+                new FileFS(target.getPath() + java.io.File.separator + getName()) :
+                new FileFS(target.getPath());
+        if(!replace && targetFile.isExist()) return null;
+        Files.copy(getEntity().toPath(), ((FileFS) targetFile).getEntity().toPath(), StandardCopyOption.REPLACE_EXISTING);
+        return targetFile;
     }
 
     @Override
     public File copy(String target, boolean replace) throws IOException {
-        if(!isExist()) return null;
-        java.io.File sourceFile = getEntity();
-        java.io.File targetCheck = new java.io.File(target);
-        String targetPath = null;
-        if(targetCheck.isDirectory())
-            targetPath = target + java.io.File.separator + sourceFile.getName();
-        else
-            targetPath = target;
-        java.io.File targetFile = new java.io.File(targetPath);
-        if(!replace && targetFile.exists()) return null;
-        Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        return new FileFS(targetPath);
+        Entity targetEntity = EntityFS.isDirectory(target) ? new DirectoryFS(target) : new FileFS(target);
+        return copy(targetEntity, replace);
     }
 
-    public File copy(Entity target, boolean replace) {
-        if(!isExist() || !target.isExist()) return null;
-        if(target instanceof Directory) {
-
-
-
-
-        }
-        if(!replace && target.isExist()) return null;
-
-
-
+    @Override
+    public Entity move(Entity target, boolean replace) throws IOException {
         return null;
     }
 
     @Override
-    public boolean move(String target, boolean replace) throws IOException{
-        if(copy(target, replace) != null) {
-            if(delete()) {
-                setPath(target);
-                return true;
-            }
-        } return false;
+    public Entity move(String target, boolean replace) throws IOException {
+        File targetFile = copy(target, replace);
+        if(targetFile != null && delete()) return targetFile;
+        return null;
     }
 
     @Override
-    public boolean rename(String target, boolean replace) throws IOException {
-        java.io.File sourceFile = getEntity();
-        return move(sourceFile.getParent() == null ? "" : sourceFile.getParent() + java.io.File.separator + target, replace);
+    public Entity rename(Entity target, boolean replace) throws IOException{
+        return null;
     }
 
     @Override
-    public Directory getDirectory() {
-        return new DirectoryFS();
+    public Entity rename(String target, boolean replace) throws IOException {
+        return move(getParent() + java.io.File.separator + target, replace);
     }
 
     @Override
@@ -131,6 +132,7 @@ public class FileFS extends EntityFS implements File {
 
     @Override
     public String toString() {
-        return getPath();
+        return super.toString();
     }
+
 }
