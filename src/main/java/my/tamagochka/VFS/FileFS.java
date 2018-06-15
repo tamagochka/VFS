@@ -1,5 +1,7 @@
 package my.tamagochka.VFS;
 
+import com.sun.istack.internal.NotNull;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,10 +12,6 @@ import java.nio.file.StandardCopyOption;
 public class FileFS extends EntityFS implements File {
 
     public FileFS(String path) { super(path); }
-
-    public FileFS() {
-        super(null);
-    }
 
     @Override
     public String readLine() {
@@ -34,6 +32,8 @@ public class FileFS extends EntityFS implements File {
     public void writeBytes(byte[] bytes) {
 
     }
+
+    // сделать методы copy move и rename с параметром target типа Entity
 
     @Override
     public long countLines() throws IOException {
@@ -65,7 +65,7 @@ public class FileFS extends EntityFS implements File {
 
     @Override
     public boolean delete() {
-        if(getEntity().delete()) {
+        if(isExist() && getEntity().delete()) {
             setPath(null);
             return true;
         }
@@ -73,13 +73,8 @@ public class FileFS extends EntityFS implements File {
     }
 
     @Override
-    public boolean rename(String target, boolean replace) throws IOException {
-        java.io.File sourceFile = getEntity();
-        return move(sourceFile.getParent() == null ? "" : sourceFile.getParent() + java.io.File.separator + target, replace);
-    }
-
-    @Override
     public File copy(String target, boolean replace) throws IOException {
+        if(!isExist()) return null;
         java.io.File sourceFile = getEntity();
         java.io.File targetCheck = new java.io.File(target);
         String targetPath = null;
@@ -93,6 +88,21 @@ public class FileFS extends EntityFS implements File {
         return new FileFS(targetPath);
     }
 
+    public File copy(Entity target, boolean replace) {
+        if(!isExist() || !target.isExist()) return null;
+        if(target instanceof Directory) {
+
+
+
+
+        }
+        if(!replace && target.isExist()) return null;
+
+
+
+        return null;
+    }
+
     @Override
     public boolean move(String target, boolean replace) throws IOException{
         if(copy(target, replace) != null) {
@@ -101,6 +111,17 @@ public class FileFS extends EntityFS implements File {
                 return true;
             }
         } return false;
+    }
+
+    @Override
+    public boolean rename(String target, boolean replace) throws IOException {
+        java.io.File sourceFile = getEntity();
+        return move(sourceFile.getParent() == null ? "" : sourceFile.getParent() + java.io.File.separator + target, replace);
+    }
+
+    @Override
+    public Directory getDirectory() {
+        return new DirectoryFS();
     }
 
     @Override

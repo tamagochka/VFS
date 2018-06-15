@@ -15,19 +15,23 @@ public abstract class EntityFS implements Entity {
     @Override public abstract boolean move(String target, boolean replace) throws IOException;
     @Override public abstract long getSize();
 
-    protected EntityFS(String path) { setPath(path); }
+    protected EntityFS(String path) {
+        if(path == null) throw new NullPointerException();
+        setPath(path);
+    }
 
-    protected void setPath(String path) {
+    private void setPath(String path) {
         this.path = path;
         if(path != null) entity = new File(path);
             else entity = null;
     }
 
-    protected String getPath() {
-        return path;
+    @Override public String getName() { return entity != null ? entity.getName() : null; }
+    @Override public String getParent() {
+        return entity != null ? (entity.getParent() == null ? "" : entity.getParent()) : null;
     }
-    protected File getEntity() { return entity; }
+
     @Override public boolean isExist() { return entity != null && entity.exists(); }
     @Override public String getAbsolutePath() { return entity != null ? entity.getAbsolutePath() : null; }
-
+    @Override public String getPath() { return entity != null ? entity.getPath() : null; }
 }

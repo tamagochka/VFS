@@ -10,5 +10,8 @@ public interface Entity {
     boolean move(String target, boolean replace) throws IOException;
     boolean isExist();
     String getAbsolutePath();
+    String getPath();
+    String getName();
+    String getParent();
     long getSize();
 }

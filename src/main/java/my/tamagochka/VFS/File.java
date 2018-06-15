@@ -8,4 +8,5 @@ public interface File extends Entity {
     void writeLine(String line);
     void writeBytes(byte bytes[]);
     long countLines() throws IOException;
+    Directory getDirectory();
 }
