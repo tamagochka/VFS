@@ -1,9 +1,6 @@
 package my.tamagochka.VFS;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -11,24 +8,53 @@ public class FileFS extends EntityFS implements File {
 
     public FileFS(String path) { super(path); }
 
+    public String readLine(int number) throws IOException {
+        if(!isExist()) return null;
+        InputStream is = new BufferedInputStream(new FileInputStream(getPath()));
+        byte buffer[] = new byte[1024];
+        byte string[] = new byte[1048576];
+        int lenString = 0;
+        int scannedLines = 0;
+        int readChars = 0;
+        while((readChars = is.read(buffer)) != -1) {
+            for(int i = 0; i < readChars; i++)
+                if(buffer[i] == '\n') {
+                    if(number == scannedLines)
+                        return new String(string, 0, lenString);
+                    else {
+                        lenString = 0;
+                        scannedLines++;
+                    }
+                } else {
+                    string[lenString] = buffer[i];
+                    lenString++;
+                }
+        }
+        is.close();
+        if(scannedLines == number) return new String(string, 0, lenString);
+        return null;
+    }
+
+    private InputStream inputStream = null;
+
     @Override
     public String readLine() throws IOException {
         if(!isExist()) return null;
-        InputStream is = new BufferedInputStream(new FileInputStream(getPath()));
-        char c[] = new char[1024];
-        int readChars = 0;
-        StringBuilder str = new StringBuilder();
-        while((readChars = is.read(c)) != -1) {
-            int i = 0;
-            while(i < readChars && c[i] != '\n') {
-                str.append(c[i]);
-                i++;
-            }
-            if(c[i] == '\n') break;
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(getPath()));
+        byte string[] = new byte[1048576];
+
+
+
+
+        int b = is.read();
+        int i = 0;
+        while(b != -1 && b != '\n') {
+            buffer[i] = (byte) b;
+            i++;
+            b = is.read();
         }
-        System.out.println(str.toString());
-
-
+        String str = new String(buffer, 0, i);
+        System.out.println(str);
         return null;
     }
 
