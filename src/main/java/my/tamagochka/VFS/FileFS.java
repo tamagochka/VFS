@@ -8,9 +8,10 @@ public class FileFS extends EntityFS implements File {
 
     public FileFS(String path) { super(path); }
 
+    @Override
     public String readLine(int number) throws IOException {
         if(!isExist()) return null;
-        InputStream is = new BufferedInputStream(new FileInputStream(getPath()));
+        InputStream is = new BufferedInputStream(new FileInputStream(getEntity()));
         byte buffer[] = new byte[1024];
         byte string[] = new byte[1048576];
         int lenString = 0;
@@ -18,11 +19,12 @@ public class FileFS extends EntityFS implements File {
         int readChars = 0;
         while((readChars = is.read(buffer)) != -1) {
             for(int i = 0; i < readChars; i++)
-                if(buffer[i] == '\n') {
+                if(buffer[i] == '\r') {
                     if(number == scannedLines)
                         return new String(string, 0, lenString);
                     else {
                         lenString = 0;
+                        i++;
                         scannedLines++;
                     }
                 } else {
@@ -36,30 +38,45 @@ public class FileFS extends EntityFS implements File {
     }
 
     private InputStream inputStream = null;
+    private boolean endFileFlag = false;
+
+    public void resetFilePos() throws IOException {
+        if(inputStream != null) inputStream.close();
+        inputStream = new BufferedInputStream(new FileInputStream(getEntity()));
+        endFileFlag = false;
+    }
+
+    public boolean EOF() { return endFileFlag; }
 
     @Override
     public String readLine() throws IOException {
+        if(endFileFlag) return null;
         if(!isExist()) return null;
-        InputStream inputStream = new BufferedInputStream(new FileInputStream(getPath()));
+        if(inputStream == null) inputStream = new BufferedInputStream(new FileInputStream(getEntity()));
         byte string[] = new byte[1048576];
-
-
-
-
-        int b = is.read();
+        int b = inputStream.read();
         int i = 0;
-        while(b != -1 && b != '\n') {
-            buffer[i] = (byte) b;
+        while((b != '\r') && (b != -1)) {
+            string[i] = (byte) b;
+            b = inputStream.read();
             i++;
-            b = is.read();
         }
-        String str = new String(buffer, 0, i);
-        System.out.println(str);
-        return null;
+        b = inputStream.read();
+        if(b == -1) endFileFlag = true;
+        return new String(string, 0, i);
     }
 
     @Override
-    public byte[] readBytes() {
+    public byte[] readBytes(int count) throws IOException{
+        if(!isExist()) return null;
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(getEntity()));
+
+
+
+
+
+
+
         return new byte[0];
     }
 
@@ -76,7 +93,7 @@ public class FileFS extends EntityFS implements File {
     @Override
     public long countLines() throws IOException {
         if(!isExist()) return 0;
-        InputStream is = new BufferedInputStream(new FileInputStream(getPath()));
+        InputStream is = new BufferedInputStream(new FileInputStream(getEntity()));
         byte c[] = new byte[1024];
         int count = 0;
         int readChars = 0;
