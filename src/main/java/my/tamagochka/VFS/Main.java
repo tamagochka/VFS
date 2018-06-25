@@ -1,36 +1,23 @@
 package my.tamagochka.VFS;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
         try {
-            FileFS f = new FileFS("test" + java.io.File.separator + "8.txt");
+            FileFS f = new FileFS("test" + java.io.File.separator + "1.txt");
 
             while(!f.EOF()) {
-                System.out.println("'" + f.readLine() + "'");
-            }
-            f.resetFilePos();
-
-            while(!f.EOF()) {
-                System.out.println("'" + f.readLine() + "'");
+                f.skip(1);
+                System.out.println(HexBin.encode(f.readBytes(1)));
             }
 
 
-
-/*
-            System.out.println("line: '" + f.readLine() + "'");
-            System.out.println("line: '" + f.readLine() + "'");
-            System.out.println("line: '" + f.readLine() + "'");
-*/
-
-
-/*
-            System.out.println("line: '" + f.readLine(0)+ "'");
-            System.out.println("line: '" + f.readLine(1)+ "'");
-            System.out.println("line: '" + f.readLine(2)+ "'");
-*/
 
 
         } catch (IOException e) {

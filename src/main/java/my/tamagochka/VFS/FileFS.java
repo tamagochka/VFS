@@ -38,21 +38,20 @@ public class FileFS extends EntityFS implements File {
     }
 
     private InputStream inputStream = null;
-    private boolean endFileFlag = false;
+    private boolean EOFFlag = false;
 
-    public void resetFilePos() throws IOException {
+    public void resetFilePosition() throws IOException {
         if(inputStream != null) inputStream.close();
         inputStream = new BufferedInputStream(new FileInputStream(getEntity()));
-        endFileFlag = false;
+        EOFFlag = false;
     }
 
-    public boolean EOF() { return endFileFlag; }
+    public boolean EOF() { return EOFFlag; }
 
     @Override
     public String readLine() throws IOException {
-        if(endFileFlag) return null;
-        if(!isExist()) return null;
-        if(inputStream == null) inputStream = new BufferedInputStream(new FileInputStream(getEntity()));
+        if(EOFFlag || !isExist()) return null;
+        if(inputStream == null) resetFilePosition();
         byte string[] = new byte[1048576];
         int b = inputStream.read();
         int i = 0;
@@ -62,22 +61,30 @@ public class FileFS extends EntityFS implements File {
             i++;
         }
         b = inputStream.read();
-        if(b == -1) endFileFlag = true;
+        if(b == -1) EOFFlag = true;
         return new String(string, 0, i);
     }
 
+    public void seek(long position) throws IOException {
+        resetFilePosition();
+        inputStream.skip(position);
+        if(inputStream.available() == 0) EOFFlag = true;
+    }
+
+    public void skip(long count) throws IOException {
+        if(inputStream == null) resetFilePosition();
+        inputStream.skip(count);
+        if(inputStream.available() == 0) EOFFlag = true;
+    }
+
     @Override
-    public byte[] readBytes(int count) throws IOException{
-        if(!isExist()) return null;
-        InputStream inputStream = new BufferedInputStream(new FileInputStream(getEntity()));
-
-
-
-
-
-
-
-        return new byte[0];
+    public byte[] readBytes(int count) throws IOException {
+        if(EOFFlag || !isExist()) return null;
+        if(inputStream == null) resetFilePosition();
+        byte bytes[] = new byte[count];
+        if(inputStream.read(bytes) == -1) return null;
+        if(inputStream.available() == 0) EOFFlag = true;
+        return bytes;
     }
 
     @Override
